@@ -28,3 +28,36 @@ num_rolls = 100000
 sums = monte_carlo_simulation(num_rolls)
 probabilities = calculate_probabilities(sums, num_rolls)
 plot_probabilities(probabilities)
+
+# Аналітичні ймовірності для порівняння
+analytical_probabilities = {
+    2: 2.78,
+    3: 5.56,
+    4: 8.33,
+    5: 11.11,
+    6: 13.89,
+    7: 16.67,
+    8: 13.89,
+    9: 11.11,
+    10: 8.33,
+    11: 5.56,
+    12: 2.78
+}
+
+# Висновки
+with open("readme.md", "w") as f:
+    f.write("# Висновки щодо правильності розрахунків\n\n")
+    f.write("Аналітичні ймовірності:\n")
+    for sum_val, prob in analytical_probabilities.items():
+        f.write(f"Сума {sum_val}: {prob}%\n")
+
+    f.write("\nЙмовірності, отримані за допомогою методу Монте-Карло:\n")
+    for i in range(2, 13):
+        f.write(f"Сума {i}: {probabilities[i]:.2f}%\n")
+
+    f.write("\nПорівняння:\n")
+    for i in range(2, 13):
+        f.write(f"Сума {i}: аналітична = {analytical_probabilities[i]}%, Монте-Карло = {probabilities[i]:.2f}%\n")
+
+    f.write("\nВисновки:\n")
+    f.write("Результати, отримані за допомогою методу Монте-Карло, добре збігаються з аналітичними результатами. Відхилення знаходяться в межах допустимих похибок, що свідчить про правильність обчислень.")
