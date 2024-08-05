@@ -17,33 +17,31 @@ class Graph:
         self.distances[(to_node, from_node)] = distance
 
 def dijkstra(graph, initial):
-    visited = {initial: 0}
-    path = {}
+    # Відстані до всіх вузлів
+    distances = {node: float('infinity') for node in graph.nodes}
+    distances[initial] = 0
 
-    nodes = set(graph.nodes)
+    # Батьківський вузол для побудови шляху
+    previous_nodes = {node: None for node in graph.nodes}
 
-    while nodes:
-        min_node = None
-        for node in nodes:
-            if node in visited:
-                if min_node is None:
-                    min_node = node
-                elif visited[node] < visited[min_node]:
-                    min_node = node
+    # Бінарна купа
+    priority_queue = [(0, initial)]
 
-        if min_node is None:
-            break
+    while priority_queue:
+        current_distance, current_node = heapq.heappop(priority_queue)
 
-        nodes.remove(min_node)
-        current_weight = visited[min_node]
+        if current_distance > distances[current_node]:
+            continue
 
-        for edge in graph.edges[min_node]:
-            weight = current_weight + graph.distances[(min_node, edge)]
-            if edge not in visited or weight < visited[edge]:
-                visited[edge] = weight
-                path[edge] = min_node
+        for neighbor in graph.edges[current_node]:
+            distance = current_distance + graph.distances[(current_node, neighbor)]
 
-    return visited, path
+            if distance < distances[neighbor]:
+                distances[neighbor] = distance
+                previous_nodes[neighbor] = current_node
+                heapq.heappush(priority_queue, (distance, neighbor))
+
+    return distances, previous_nodes
 
 # Приклад використання
 graph = Graph()
@@ -60,6 +58,6 @@ graph.add_edge(2, 5, 2)
 graph.add_edge(3, 4, 6)
 graph.add_edge(4, 5, 9)
 
-visited, path = dijkstra(graph, 0)
-print("Відстані до всіх вузлів:", visited)
-print("Шлях:", path)
+distances, previous_nodes = dijkstra(graph, 0)
+print("Відстані до всіх вузлів:", distances)
+print("Шлях:", previous_nodes)

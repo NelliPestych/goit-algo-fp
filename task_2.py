@@ -1,24 +1,38 @@
-import matplotlib.pyplot as plt
-import numpy as np
+import turtle
 
-def draw_pythagoras_tree(ax, x, y, side, angle, level):
+def draw_pythagoras_tree(length, level):
     if level == 0:
+        turtle.forward(length)
+        turtle.backward(length)
         return
 
-    x1 = x + side * np.cos(angle)
-    y1 = y + side * np.sin(angle)
-    x2 = x1 - side * np.sin(angle) * np.tan(np.pi / 4)
-    y2 = y1 + side * np.cos(angle) * np.tan(np.pi / 4)
+    # Draw the main branch
+    turtle.forward(length)
 
-    ax.plot([x, x1], [y, y1], color='brown')
-    ax.plot([x1, x2], [y1, y2], color='brown')
-    ax.plot([x2, x + side * np.cos(angle - np.pi / 2)], [y2, y], color='brown')
-    ax.plot([x + side * np.cos(angle - np.pi / 2), x], [y, y], color='brown')
+    # Draw the left branch
+    turtle.left(45)
+    draw_pythagoras_tree(length * 0.7, level - 1)
 
-    draw_pythagoras_tree(ax, x1, y1, side / np.sqrt(2), angle - np.pi / 4, level - 1)
-    draw_pythagoras_tree(ax, x2, y2, side / np.sqrt(2), angle + np.pi / 4, level - 1)
+    # Move to the right branch position
+    turtle.right(90)
+    draw_pythagoras_tree(length * 0.7, level - 1)
 
-fig, ax = plt.subplots()
-draw_pythagoras_tree(ax, 0, 0, 1, np.pi / 2, 5)
-ax.set_aspect('equal')
-plt.show()
+    # Return to the original position
+    turtle.left(45)
+    turtle.backward(length)
+
+def main():
+    turtle.speed(0)
+    turtle.left(90)  # Start facing upwards
+    turtle.up()
+    turtle.backward(200)
+    turtle.down()
+
+    # Введення рівня рекурсії користувачем
+    level = int(input("Введіть рівень рекурсії: "))
+
+    draw_pythagoras_tree(100, level)
+    turtle.done()
+
+if __name__ == "__main__":
+    main()
